@@ -1,0 +1,70 @@
+آپدیت کردن سیستم عامل
+apt-get update
+apt-get upgrade -y
+
+نصب پیش نیازها برای کامپایل سورس برنامه
+apt-get -y install build-essential wget make curl gcc  wget zlib1g-dev tzdata git libreadline-dev libncurses-dev libssl-dev 
+
+دانلود نرم افزار و از حالت فشرده خارج کردن آن
+wget مسیر فایل فشرده سافت اتر که از سایت سافت اتر کپی کردید
+tar xzf اسم فایل فشرده دانلود شده
+
+کامپایل نرم افزار
+cd vpnserver
+make
+cd ..
+
+منتقل کردن پوشه
+mv vpnserver /usr/local && cd /usr/local/vpnserver/
+
+ویرایش دسترسیها
+chmod 600 *
+chmod 700 vpnserver vpncmd
+
+فعال کردن سرور
+sudo ./vpnserver start
+
+وارد شدن به محیط کامندی مدیریت سرور
+توی این قسمت  در جواب به سوالها فقط اینتر بزنید و چیزی تایپ نکنید
+sudo ./vpncmd
+با این فرمان میتونید برای محیط مدیریت سرور پسورد ست کنید
+ServerPasswordSet
+
+ساختن فایل برای سرویس
+کافیه این قسمت رو تا قبل خط نقطه چین کپی کنید توی ترمینال و اینتر بزنید. فایل براتون ایجاد میشه و محتوای لازم در اون قرار میگیره
+sudo cat >> /lib/systemd/system/vpnserver.service << EOF
+[Unit]
+Description=SoftEther VPN Server
+After=network.target
+[Service]
+Type=forking
+ExecStart=/usr/local/vpnserver/vpnserver start
+ExecStop=/usr/local/vpnserver/vpnserver stop
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+
+
+vi /etc/sysctl.conf 
+تغییر و فعال کردن ipv4
+:wq
+------------------------------------
+
+فعال کردن مسیریابی در سرور
+echo net.ipv4.ip_forward = 1 | ${SUDO} tee -a /etc/sysctl.conf
+
+فعال کردن سرویس
+systemctl enable vpnserver
+systemctl start vpnserver
+بررسی وضعیت سرویس
+systemctl status vpnserver
+
+باز کردن پورتهای لازم روی فایروال
+ufw allow 443
+ufw allow 500,4500/udp
+ufw allow 1701
+ufw allow 1194
+ufw allow 5555
+

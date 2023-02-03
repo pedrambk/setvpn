@@ -1,25 +1,13 @@
 آپدیت کردن سیستم عامل
-apt-get update
-apt-get upgrade -y
-
-نصب پیش نیازها برای کامپایل سورس برنامه
+sudo apt-get update
+sudo apt-get upgrade -y
 apt-get -y install build-essential wget make curl gcc  wget zlib1g-dev tzdata git libreadline-dev libncurses-dev libssl-dev 
 wget https://github.com/SoftEtherVPN/SoftEtherVPN_Stable/releases/download/v4.39-9772-beta/softether-vpnserver-v4.39-9772-beta-2022.04.26-linux-x64-64bit.tar.gz
-دانلود نرم افزار و از حالت فشرده خارج کردن آن
-wget مسیر فایل فشرده سافت اتر که از سایت سافت اتر کپی کردید
-tar xzf اسم فایل فشرده دانلود شده
-tar xzf so <Press "tab" to Autofill>
-کامپایل نرم افزار
+tar xzf softether-vpnserver-v4.39-9772-beta-2022.04.26-linux-x64-64bit.tar.gz
 cd vpnserver
 make
 cd ..
-
-منتقل کردن پوشه
 mv vpnserver /usr/local && cd /usr/local/vpnserver/
-
-ویرایش دسترسیها
-chmod 600 *
-chmod 700 vpnserver vpncmd
 
 فعال کردن سرور
 sudo ./vpnserver start
@@ -30,6 +18,14 @@ sudo ./vpncmd
 با این فرمان میتونید برای محیط مدیریت سرور پسورد ست کنید
 ServerPasswordSet
 
+
+
+
+
+ویرایش دسترسیها
+chmod 600 *
+chmod 700 vpnserver vpncmd
+ 
 ساختن فایل برای سرویس
 کافیه این قسمت رو تا قبل خط نقطه چین کپی کنید توی ترمینال و اینتر بزنید. فایل براتون ایجاد میشه و محتوای لازم در اون قرار میگیره
 sudo cat >> /lib/systemd/system/vpnserver.service << EOF
